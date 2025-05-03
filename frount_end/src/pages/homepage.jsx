@@ -112,6 +112,42 @@ export default function Home() {
     }
   };
 
+  // Replace these URLs with your actual Cloudinary image URLs
+const galleryImages = [
+  {
+    src: "https://res.cloudinary.com/dhxhlundz/image/upload/v1746297742/834240e0-78bb-4593-b3af-2174b3f395de_lk4afy.jpg",
+    title: "Detailed Mandala",
+    desc: "Engraved on Maple using EngraveMaster"
+  },
+  {
+    src: "https://res.cloudinary.com/dhxhlundz/image/upload/v1746297742/Segnalibri_Case_Harry_Potter_in_legno_realizzati_igwi4z.jpg",
+    title: "Custom Nameplate",
+    desc: "Precision cut with walnut wood"
+  },
+  {
+    src: "https://res.cloudinary.com/dhxhlundz/image/upload/v1746298736/Follow_the_link_to_enhance_your_creative_projects_uns6gj.jpg",
+    title: "Laser Artwork",
+    desc: "Unique pattern engraved on plywood"
+  },
+  {
+    src: "https://res.cloudinary.com/dhxhlundz/image/upload/v1746298737/333e01b4-8370-43be-a0b5-2a97755a7fd1_vedpol.jpg",
+    title: "Decorative Coaster",
+    desc: "Made from bamboo sheet"
+  },
+  {
+    src: "https://res.cloudinary.com/dhxhlundz/image/upload/v1746298737/Click_the_link_to_enhance_your_designs_on_the_ap1wse.jpg",
+    title: "Photo Engraving",
+    desc: "Captured memories on wood"
+  },
+  {
+    src: "https://res.cloudinary.com/dhxhlundz/image/upload/v1746298737/15_Creative_Laser_Cutting_and_Engraving_Project_v4lsep.jpg",
+    title: "Logo Branding",
+    desc: "Professional finish with EngraveMaster"
+  }
+];
+
+
+
   return (
     <>
       <Navbar />
@@ -279,7 +315,7 @@ export default function Home() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {[1, 2, 3, 4, 5, 6].map((item, index) => (
+              {galleryImages.map((item, index) => (
                 <motion.div
                   key={index}
                   initial={{ opacity: 0, scale: 0.9 }}
@@ -289,14 +325,14 @@ export default function Home() {
                   className="relative overflow-hidden rounded-xl shadow-lg aspect-square group"
                 >
                   <img 
-                    src={`https://source.unsplash.com/random/600x600?wood,engraving,art&sig=${index}`} 
-                    alt={`Gallery item ${index + 1}`}
+                    src={item.src}
+                    alt={item.title}
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end">
                     <div className="p-6 text-white">
-                      <h3 className="font-bold text-lg">Wooden Masterpiece {index + 1}</h3>
-                      <p className="text-sm text-gray-200">Created with EngraveMaster</p>
+                      <h3 className="font-bold text-lg">{item.title}</h3>
+                      <p className="text-sm text-gray-200">{item.desc}</p>
                     </div>
                   </div>
                 </motion.div>

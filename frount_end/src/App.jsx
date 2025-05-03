@@ -9,6 +9,8 @@ import Services from './pages/Services'
 import Contact from './pages/Contact'
 import ProfilePage from './pages/ProfilePage'
 import YourProjects from './pages/YourProjects'
+import NotesAndSketches from './pages/Notes'
+import Support from './pages/support'
 
 import Docs from "./pages/Docs";
 import AskAI from './pages/AskAI'
@@ -33,6 +35,8 @@ function App() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/create" element={<Create />} />
           <Route path="/yourprojects" element={<YourProjects />} />
+          <Route path="/notes" element={<NotesAndSketches />} />
+          <Route path="/support" element={<Support />} />
 
           {/* Protected route */}
           <Route
