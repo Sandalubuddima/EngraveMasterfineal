@@ -56,7 +56,7 @@ export default function Home() {
       icon: <FiFolder />, 
       color: "#845EC2", 
       label: "Your Projects",
-      href: "/projects",
+      href: "/yourprojects",
       description: "Access your saved designs"
     },
     { 
