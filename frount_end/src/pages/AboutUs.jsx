@@ -250,7 +250,7 @@ export default function AboutUs() {
                 <div className="relative bg-white dark:bg-[#2a2a2a] rounded-2xl overflow-hidden shadow-xl">
                   <div className="aspect-w-4 aspect-h-3">
                     <img 
-                      src="https://images.unsplash.com/photo-1635342219731-4ae4bf4717ba?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1080&q=80" 
+                      src="https://res.cloudinary.com/dhxhlundz/image/upload/v1746299490/Follow_the_link_to_enhance_your_creative_projects_1_t0eclw.jpg" 
                       alt="Laser engraving in action" 
                       className="object-cover w-full h-full"
                     />

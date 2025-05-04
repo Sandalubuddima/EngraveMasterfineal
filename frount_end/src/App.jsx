@@ -8,13 +8,19 @@ import AboutUs from './pages/AboutUs'
 import Services from './pages/Services'
 import Contact from './pages/Contact'
 import ProfilePage from './pages/ProfilePage'
-import YourProjects from './pages/YourProjects'
-import NotesAndSketches from './pages/Notes'
-import Support from './pages/support'
 
+//homepage
 import Docs from "./pages/Docs";
 import AskAI from './pages/AskAI'
 import Create from './pages/Create'
+import NotesAndSketches from './pages/Notes'
+import YourProjects from './pages/YourProjects'
+import Support from './pages/support'
+
+// admin part 
+import Dashboard from './pages/Dashboard'
+import AdminUsers from './admin/Users'
+
 import { GoogleOAuthProvider } from '@react-oauth/google'
 import ProtectedRoute from './components/ProtectedRoute'; // Import it
 
@@ -30,13 +36,21 @@ function App() {
           <Route path="/login" element={<Loging_page />} />
           <Route path="/signup" element={<Signup_page />} />
           <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/contact" element={<Contact />} />
+
+          
           <Route path="/docs" element={<Docs />} />
           <Route path="/services" element={<Services />} />
-          <Route path="/contact" element={<Contact />} />
           <Route path="/create" element={<Create />} />
           <Route path="/yourprojects" element={<YourProjects />} />
           <Route path="/notes" element={<NotesAndSketches />} />
           <Route path="/support" element={<Support />} />
+
+          {/* admin part */}
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/admin/Users" element={<AdminUsers />} />
+
+
 
           {/* Protected route */}
           <Route

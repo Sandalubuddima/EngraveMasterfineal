@@ -328,19 +328,20 @@ class App {
   }
   createMedias(items, bend = 1, textColor, borderRadius, font) {
     const defaultItems = [
-      { image: `https://picsum.photos/id/237/200/300`, text: 'Bridge' },
-      { image: `https://picsum.photos/seed/picsum/200/300`, text: 'Desk Setup' },
-      { image: `https://picsum.photos/200/300?grayscale`, text: 'Waterfall' },
-      { image: `https://picsum.photos/seed/4/800/600?grayscale`, text: 'Strawberries' },
-      { image: `https://picsum.photos/seed/5/800/600?grayscale`, text: 'Deep Diving' },
-      { image: `https://picsum.photos/seed/16/800/600?grayscale`, text: 'Train Track' },
-      { image: `https://picsum.photos/seed/17/800/600?grayscale`, text: 'Santorini' },
-      { image: `https://picsum.photos/seed/8/800/600?grayscale`, text: 'Blurry Lights' },
-      { image: `https://picsum.photos/seed/9/800/600?grayscale`, text: 'New York' },
-      { image: `https://picsum.photos/seed/10/800/600?grayscale`, text: 'Good Boy' },
-      { image: `https://picsum.photos/seed/21/800/600?grayscale`, text: 'Coastline' },
-      { image: `https://picsum.photos/seed/12/800/600?grayscale`, text: "Palm Trees" }
-    ]
+      { image: `https://res.cloudinary.com/dhxhlundz/image/upload/v1746297742/Segnalibri_Case_Harry_Potter_in_legno_realizzati_igwi4z.jpg`, text: 'Custom Bookmarks' },
+      { image: `https://res.cloudinary.com/dhxhlundz/image/upload/v1746297742/834240e0-78bb-4593-b3af-2174b3f395de_lk4afy.jpg`, text: 'Engraved Gift Box' },
+      { image: `https://res.cloudinary.com/dhxhlundz/image/upload/v1746298736/Follow_the_link_to_enhance_your_creative_projects_uns6gj.jpg`, text: 'Nature Art Panel' },
+      { image: `https://res.cloudinary.com/dhxhlundz/image/upload/v1746298737/333e01b4-8370-43be-a0b5-2a97755a7fd1_vedpol.jpg`, text: 'Fruit Crate Design' },
+      { image: `https://res.cloudinary.com/dhxhlundz/image/upload/v1746298737/15_Creative_Laser_Cutting_and_Engraving_Project_v4lsep.jpg`, text: 'Creative Mandala Engraving' },
+      { image: `https://res.cloudinary.com/dhxhlundz/image/upload/v1746298737/Click_the_link_to_enhance_your_designs_on_the_ap1wse.jpg`, text: 'Train Scene Panel' },
+      { image: `https://res.cloudinary.com/dhxhlundz/image/upload/v1746299490/Follow_the_link_to_enhance_your_creative_projects_1_t0eclw.jpg`, text: 'Scenic Landscape Engraving' },
+      { image: `https://res.cloudinary.com/dhxhlundz/image/upload/v1746299490/Transform_your_home_decor_with_our_DIY_Custom_rmxo3h.jpg`, text: 'Home Decor Plaque' },
+      { image: `https://res.cloudinary.com/dhxhlundz/image/upload/v1746299491/8f79da4c-5838-4b39-b654-cfafc97031aa_tsjg9o.jpg`, text: 'City Skyline Design' },
+      { image: `https://res.cloudinary.com/dhxhlundz/image/upload/v1746299718/Llaveros_Ecolo%CC%81gicos_Personalizados_Tattoos_s5lr9i.jpg`, text: 'Custom Keychains' },
+      { image: `https://res.cloudinary.com/dhxhlundz/image/upload/v1746299728/9065eb47-6297-40fb-b63b-9b7fd483a44d_q9pqn5.jpg`, text: 'Coastal Wall Art' },
+      { image: `https://res.cloudinary.com/dhxhlundz/image/upload/v1746299735/cf7b592f-7b1f-4033-812f-f282fa83516f_gcjmvh.jpg`, text: "Tropical Wood Panel" }
+    ];
+    
     const galleryItems = items && items.length ? items : defaultItems
     this.mediasImages = galleryItems.concat(galleryItems)
     this.medias = this.mediasImages.map((data, index) => {

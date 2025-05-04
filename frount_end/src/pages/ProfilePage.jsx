@@ -42,7 +42,7 @@ export default function ProfilePage() {
     {
       id: 3,
       title: "Business Logo",
-      image: "https://images.unsplash.com/photo-1618090584352-1603bd4529f6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fHdvb2QlMjBlbmdyYXZpbmd8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=600&q=60",
+      image: "https://res.cloudinary.com/dhxhlundz/image/upload/v1746299490/Transform_your_home_decor_with_our_DIY_Custom_rmxo3h.jpg",
       date: "2023-11-28",
       status: "in-progress",
       description: "Company logo engraving for reception desk."
@@ -50,7 +50,7 @@ export default function ProfilePage() {
     {
       id: 4,
       title: "Custom Cutting Board",
-      image: "https://images.unsplash.com/photo-1544098730-e4ee8a7e6c4a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTZ8fHdvb2QlMjBlbmdyYXZpbmd8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=600&q=60",
+      image: "https://res.cloudinary.com/dhxhlundz/image/upload/v1746299491/8f79da4c-5838-4b39-b654-cfafc97031aa_tsjg9o.jpg",
       date: "2023-12-05",
       status: "draft",
       description: "Family recipe engraved on maple cutting board."
