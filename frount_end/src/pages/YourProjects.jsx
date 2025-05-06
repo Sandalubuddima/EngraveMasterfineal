@@ -1,5 +1,4 @@
-// ✨ Updated YourProjects.jsx with G-code conversion support
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { motion } from "framer-motion";
 import {
   FiDownload,
@@ -14,34 +13,11 @@ import {
   FiFolder,
   FiAlertCircle,
   FiCheckCircle,
-  FiZap
+  FiZap // ← Add this
 } from "react-icons/fi";
 import Navbar from "../components/PageNavbar";
 import Footer from "../components/Footer";
 import ImgPreview from "../components/ImgPreview";
-
-// Animation variants
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1
-    }
-  }
-};
-
-const itemVariants = {
-  hidden: { y: 20, opacity: 0 },
-  visible: {
-    y: 0,
-    opacity: 1,
-    transition: {
-      type: "spring",
-      stiffness: 100
-    }
-  }
-};
 
 export default function YourProjects() {
   const [images, setImages] = useState([]);
@@ -49,9 +25,9 @@ export default function YourProjects() {
   const [previewUrl, setPreviewUrl] = useState(null);
   const [renameInfo, setRenameInfo] = useState({ current: "", newName: "" });
   const [searchTerm, setSearchTerm] = useState("");
-  const [viewMode, setViewMode] = useState("grid");
-  const [sortBy, setSortBy] = useState("date");
-  const [sortOrder, setSortOrder] = useState("desc");
+  const [viewMode, setViewMode] = useState("grid"); // grid or list
+  const [sortBy, setSortBy] = useState("date"); // date, name
+  const [sortOrder, setSortOrder] = useState("desc"); // asc, desc
   const token = localStorage.getItem("token");
 
   useEffect(() => {
@@ -72,19 +48,15 @@ export default function YourProjects() {
       });
   }, [token]);
 
-  const showToast = (message, type = "success") => {
-    setToast({ message, type, visible: true });
-    setTimeout(() => setToast({ message: "", type: "", visible: false }), 3000);
-  };
-  const [toast, setToast] = useState({ message: "", type: "", visible: false });
-
   const handleDelete = async (url) => {
     const filename = url.split("/").pop();
     if (confirm(`Are you sure you want to delete ${filename}?`)) {
       try {
         const res = await fetch(`http://localhost:5001/api/photopea/delete/${filename}`, {
           method: "DELETE",
-          headers: { Authorization: `Bearer ${token}` }
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
         });
         const result = await res.json();
         if (res.ok) {
@@ -102,7 +74,10 @@ export default function YourProjects() {
 
   const handleRename = async () => {
     const { current, newName } = renameInfo;
-    if (!newName.trim()) return showToast("Enter valid name", "error");
+    if (!newName.trim()) {
+      showToast("Please enter a valid name", "error");
+      return;
+    }
     try {
       const res = await fetch(`http://localhost:5001/api/photopea/rename`, {
         method: "POST",
@@ -110,13 +85,17 @@ export default function YourProjects() {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`
         },
-        body: JSON.stringify({ oldName: current, newName })
+        body: JSON.stringify({ oldName: current, newName }),
       });
       const data = await res.json();
       if (res.ok) {
-        showToast("Renamed successfully!");
+        showToast("Project renamed successfully!");
         setImages((prev) =>
-          prev.map((img) => (img.includes(current) ? img.replace(current, newName) : img))
+          prev.map((img) =>
+            img.includes(current)
+              ? img.replace(current, newName)
+              : img
+          )
         );
         setRenameInfo({ current: "", newName: "" });
       } else {
@@ -127,60 +106,13 @@ export default function YourProjects() {
     }
   };
 
-  const handleConvertToSVG = async (imageUrl) => {
-    try {
-      const res = await fetch("http://localhost:5001/api/photopea/convert-svg", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify({ imageUrl })
-      });
-      const data = await res.json();
-      if (res.ok) {
-        showToast("SVG converted successfully!");
-        window.open(data.svgUrl, "_blank");
-      } else {
-        showToast(data.message || "Conversion failed", "error");
-      }
-    } catch (error) {
-      console.error("SVG conversion error:", error);
-      showToast("Error converting to SVG", "error");
-    }
+  const [toast, setToast] = useState({ message: "", type: "", visible: false });
+  const showToast = (message, type = "success") => {
+    setToast({ message, type, visible: true });
+    setTimeout(() => setToast({ message: "", type: "", visible: false }), 3000);
   };
 
-  const handleConvertToGcode = async (svgUrl) => {
-    try {
-      const res = await fetch("http://localhost:5001/api/photopea/svg-to-gcode", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify({ svgUrl })
-      });
-      const data = await res.json();
-      if (res.ok) {
-        const blob = new Blob([data.gcode], { type: "text/plain" });
-        const url = window.URL.createObjectURL(blob);
-        const link = document.createElement("a");
-        link.href = url;
-        link.download = "engraving.gcode";
-        document.body.appendChild(link);
-        link.click();
-        link.remove();
-        showToast("G-code downloaded!");
-      } else {
-        showToast(data.message || "Conversion failed", "error");
-      }
-    } catch (error) {
-      console.error("G-code conversion error:", error);
-      showToast("Error converting to G-code", "error");
-    }
-  };
-
-  const filteredProjects = images.filter((url) => {
+  const filteredProjects = images.filter(url => {
     const filename = url.split("/").pop().toLowerCase();
     return filename.includes(searchTerm.toLowerCase());
   });
@@ -196,6 +128,48 @@ export default function YourProjects() {
     return sortOrder === "asc" ? a.localeCompare(b) : b.localeCompare(a);
   });
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: { duration: 0.3 }
+    }
+  };
+
+  const handleConvertToSVG = async (imageUrl) => {
+    try {
+      const res = await fetch("http://localhost:5001/api/photopea/convert-svg", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ imageUrl }),
+      });
+      const data = await res.json();
+  
+      if (res.ok) {
+        showToast("SVG converted successfully!");
+        window.open(data.svgUrl, "_blank"); // Opens SVG in new tab
+      } else {
+        showToast(data.message || "Conversion failed", "error");
+      }
+    } catch (error) {
+      console.error("SVG conversion error:", error);
+      showToast("Error converting to SVG", "error");
+    }
+  };
 
   // [Rendering logic remains unchanged...]
   return (
@@ -375,15 +349,6 @@ export default function YourProjects() {
                           >
                             <FiZap size={16} />
                           </button>
-                          {filename.endsWith(".svg") && (
-                            <button
-                              onClick={() => handleConvertToGcode(url)}
-                              className="p-2 text-green-600 hover:bg-green-100 dark:hover:bg-green-800 rounded-lg transition-colors duration-200"
-                              title="Convert to G-code"
-                            >
-                              <FiZap size={16} />
-                            </button>
-                          )}
                           <button
                             onClick={() => handleDelete(url)}
                             className="p-2 text-[#FF3C3C] hover:bg-[#FF3C3C]/10 rounded-lg transition-colors duration-200"
@@ -469,22 +434,6 @@ export default function YourProjects() {
                             >
                               <FiDownload size={18} />
                             </a>
-                            <button
-                              onClick={() => handleConvertToSVG(url)}
-                              className="text-purple-600 hover:text-purple-800"
-                              title="Convert to SVG"
-                            >
-                              <FiZap size={18} />
-                            </button>
-                            {filename.endsWith(".svg") && (
-                              <button
-                                onClick={() => handleConvertToGcode(url)}
-                                className="text-green-600 hover:text-green-800"
-                                title="Convert to G-code"
-                              >
-                                <FiZap size={18} />
-                              </button>
-                            )}
                             <button
                               onClick={() => handleDelete(url)}
                               className="text-[#FF3C3C] hover:text-[#e52f2f]"

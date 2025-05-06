@@ -40,10 +40,7 @@ function App() {
 
           
           <Route path="/docs" element={<Docs />} />
-          <Route path="/services" element={<Services />} />
-          <Route path="/create" element={<Create />} />
           <Route path="/yourprojects" element={<YourProjects />} />
-          <Route path="/notes" element={<NotesAndSketches />} />
           <Route path="/support" element={<Support />} />
 
           {/* admin part */}
@@ -58,6 +55,32 @@ function App() {
             element={
               <ProtectedRoute>
                 <AskAI />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/create"
+            element={
+              <ProtectedRoute>
+                <Create />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/yourprojects"
+            element={
+              <ProtectedRoute>
+                <YourProjects />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/notes"
+            element={
+              <ProtectedRoute>
+                <NotesAndSketches />
               </ProtectedRoute>
             }
           />

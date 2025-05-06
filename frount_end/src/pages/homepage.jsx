@@ -197,7 +197,7 @@ const galleryImages = [
               animate={{ opacity: 1 }}
               transition={{ delay: 0.4, duration: 0.8 }}
               className="text-xl md:text-2xl max-w-3xl mx-auto mb-8 text-[#563232] dark:text-[#e7cfb4]"
-            >
+            ><br />
               Welcome to <span className="font-semibold">EngraveMaster</span> - The smart laser engraving platform for wooden masterpieces.
             </motion.p>
             
@@ -237,9 +237,15 @@ const galleryImages = [
               Explore EngraveMaster
             </motion.h2>
             
-            <motion.div variants={itemVariants}>
-              <GlassIcons items={glassIcons} className="z-10" />
-            </motion.div>
+                <motion.div 
+                  variants={itemVariants}
+                  className="flex justify-center"
+                >
+                  <div className="max-w-5xl w-full px-4">
+                    <GlassIcons items={glassIcons} className="z-10" />
+                  </div>
+                </motion.div>
+
           </motion.section>
 
           {/* Features Section */}

@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import Navbar from "../components/PageNavbar";
 import Footer from "../components/Footer";
 
@@ -8,6 +9,7 @@ export default function Create() {
   const fileInputRef = useRef(null);
   const [isDragging, setIsDragging] = useState(false);
   const token = localStorage.getItem("token");
+  const navigate = useNavigate(); // 👈 Added navigate hook
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -114,6 +116,16 @@ export default function Create() {
               </button>
             </div>
           )}
+
+          {/* 👇 New Button: Go to Your Projects */}
+          <div className="text-center mt-6">
+            <button
+              onClick={() => navigate("/yourprojects")}
+              className="bg-[#FF6F3C] hover:bg-[#FF6F3C] text-white font-semibold py-2 px-6 rounded-lg transition-all duration-200 shadow-md"
+            >
+              Go to Your Projects
+            </button>
+          </div>
         </div>
       </div>
       <Footer />
