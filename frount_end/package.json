@@ -20,7 +20,6 @@
     "express": "^5.1.0",
     "framer-motion": "^12.9.2",
     "ogl": "^1.0.11",
-    "potrace": "^2.1.8",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-icons": "^5.5.0",
