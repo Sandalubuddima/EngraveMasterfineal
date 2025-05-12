@@ -27,6 +27,7 @@ import NotesAndSketches from './pages/Notes';
 // Admin Pages
 import Dashboard from './pages/Dashboard';
 import AdminUsers from './admin/Users';
+import Messages from './admin/Messages';
 
 function App() {
   return (
@@ -51,8 +52,9 @@ function App() {
           <Route path="/notes" element={<ProtectedRoute><NotesAndSketches /></ProtectedRoute>} />
 
           {/* Admin Routes */}
-          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
           <Route path="/admin/Users" element={<AdminUsers />} />
+          <Route path="/admin/messages" element={<Messages />} />
 
           {/* Future: 404 Not Found Route */}
           {/* <Route path="*" element={<Error_page />} /> */}

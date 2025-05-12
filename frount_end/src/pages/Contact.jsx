@@ -8,6 +8,7 @@ export default function Contact() {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
+    phone: "",       // Added phone field
     subject: "",
     message: ""
   });
@@ -26,30 +27,40 @@ export default function Contact() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    // Here you would typically send the data to your backend
-    // For demo purposes, we'll simulate a successful submission
-    setFormStatus({
-      submitted: true,
-      success: true,
-      message: "Thanks for reaching out! We'll get back to you soon."
-    });
-    
-    // Reset form after 3 seconds
-    setTimeout(() => {
+    try {
+      const response = await fetch("http://localhost:5001/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(formData)
+      });
+      const result = await response.json();
       setFormStatus({
-        submitted: false,
+        submitted: true,
+        success: response.ok,
+        message: result.message || "Thanks for reaching out!"
+      });
+      if (response.ok) {
+        setFormData({
+          name: "",
+          email: "",
+          subject: "",
+          message: ""
+        });
+      }
+    } catch (error) {
+      console.error("Submission error:", error);
+      setFormStatus({
+        submitted: true,
         success: false,
-        message: ""
+        message: "Something went wrong. Please try again."
       });
-      setFormData({
-        name: "",
-        email: "",
-        subject: "",
-        message: ""
-      });
+    }
+    setTimeout(() => {
+      setFormStatus({ submitted: false, success: false, message: "" });
     }, 3000);
   };
 
@@ -203,6 +214,18 @@ export default function Contact() {
                           onChange={handleChange}
                           placeholder="you@example.com"
                           className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-[#FF6F3C] focus:border-transparent transition duration-200 outline-none" 
+                          required
+                        />
+                      </div>
+                      <div>
+                        <label className="block mb-2 font-medium text-gray-700 dark:text-gray-300">Phone Number</label>
+                        <input
+                          type="tel"
+                          name="phone"
+                          value={formData.phone}
+                          onChange={handleChange}
+                          placeholder="e.g. +94 77 123 4567"
+                          className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-[#FF6F3C] focus:border-transparent transition duration-200 outline-none"
                           required
                         />
                       </div>

@@ -1,4 +1,3 @@
-// index.js (or app.js)
 import express from 'express';
 import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
@@ -13,6 +12,7 @@ import userRouter from './routes/userRouter.js';
 import productRouter from './routes/productRouter.js';
 import orderRouter from './routes/orderRouter.js';
 import photopeaRouter from './routes/photopeaRouter.js';
+import contactRouter from './routes/contactRouter.js'; // ✅ Handles both /api/contact and /api/contacts
 
 dotenv.config();
 
@@ -20,13 +20,13 @@ const app = express();
 const PORT = process.env.PORT || 5001;
 const mongoUrl = process.env.MONGO_DB_URI;
 
-// Enable CORS
+// ✅ Enable CORS
 app.use(cors());
 
-// Middleware to parse JSON
+// ✅ Middleware to parse JSON
 app.use(bodyParser.json());
 
-// JWT middleware (optional global token checker)
+// ✅ JWT middleware for user authentication
 app.use((req, res, next) => {
   const token = req.header("Authorization")?.replace("Bearer ", "");
   if (token) {
@@ -40,26 +40,28 @@ app.use((req, res, next) => {
   next();
 });
 
-// Setup __dirname for ES modules
+// ✅ Setup __dirname for ES module compatibility
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // ✅ Serve static files
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
-app.use("/svgs", express.static(path.join(__dirname, "svgs"))); // ✅ Serve converted SVGs
+app.use("/svgs", express.static(path.join(__dirname, "svgs")));
 
 // ✅ Connect to MongoDB
 mongoose.connect(mongoUrl)
   .then(() => console.log("✅ Connected to MongoDB"))
   .catch((err) => console.error("❌ MongoDB connection error:", err));
 
-// ✅ Mount routers
+// ✅ Mount all routers
 app.use("/api/users", userRouter);
 app.use("/api/products", productRouter);
 app.use("/api/orders", orderRouter);
 app.use("/api/photopea", photopeaRouter);
+app.use("/api/contact", contactRouter);   // POST /api/contact  (public form submission)
+app.use("/api/contacts", contactRouter);  // GET/DELETE /api/contacts (admin panel access)
 
-// ✅ Health check
+// ✅ Health check endpoint
 app.get("/", (req, res) => {
   res.send("🔥 EngraveMaster API is running!");
 });

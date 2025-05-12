@@ -15,10 +15,8 @@ export default function LoginPage() {
   const [rememberMe, setRememberMe] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [formError, setFormError] = useState('');
-
-  // For parallax effect on background decorations
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  
+
   useEffect(() => {
     const handleMouseMove = (e) => {
       setMousePosition({
@@ -26,9 +24,17 @@ export default function LoginPage() {
         y: e.clientY / window.innerHeight - 0.5
       });
     };
-    
     window.addEventListener('mousemove', handleMouseMove);
     return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
+
+  // Load saved email if available
+  useEffect(() => {
+    const savedEmail = localStorage.getItem("userEmail");
+    if (savedEmail) {
+      setEmail(savedEmail);
+      setRememberMe(true);
+    }
   }, []);
 
   const handleSubmit = async (e) => {
@@ -39,9 +45,7 @@ export default function LoginPage() {
     try {
       const response = await fetch("http://localhost:5001/api/users/login", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
 
@@ -49,17 +53,16 @@ export default function LoginPage() {
 
       if (data.token) {
         localStorage.setItem("token", data.token);
-        
-        // If remember me is checked, store user email in localStorage
         if (rememberMe) {
           localStorage.setItem("userEmail", email);
         } else {
           localStorage.removeItem("userEmail");
         }
-        
-        // Success animation before redirect
+
+        const redirectPath = data.user.type === "admin" ? "/admin/dashboard" : "/profile";
+
         setTimeout(() => {
-          window.location.href = "/";
+          window.location.href = redirectPath;
         }, 800);
       } else {
         setFormError(data.message || "Invalid credentials. Please try again.");
@@ -79,9 +82,7 @@ export default function LoginPage() {
     try {
       const response = await fetch("http://localhost:5001/api/users/google", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           token: credentialResponse.credential,
         }),
@@ -91,10 +92,11 @@ export default function LoginPage() {
 
       if (data.token) {
         localStorage.setItem("token", data.token);
-        
-        // Success animation before redirect
+
+        const redirectPath = data.user.type === "admin" ? "/admin/dashboard" : "/profile";
+
         setTimeout(() => {
-          window.location.href = "/";
+          window.location.href = redirectPath;
         }, 800);
       } else {
         setFormError(data.message || "Google login failed. Please try again.");
@@ -106,15 +108,6 @@ export default function LoginPage() {
       setIsLoading(false);
     }
   };
-
-  // Load saved email if available
-  useEffect(() => {
-    const savedEmail = localStorage.getItem("userEmail");
-    if (savedEmail) {
-      setEmail(savedEmail);
-      setRememberMe(true);
-    }
-  }, []);
 
   return (
     <>
