@@ -12,6 +12,8 @@ import ImgPreview from "../../components/ImgPreview";
 export default function PreviewModal({ url, onClose, onRename, onDelete }) {
   const filename = url?.split("/").pop();
   const [step, setStep] = useState(1);
+  const [material, setMaterial] = useState("");
+  const [timber, setTimber] = useState("");
 
   return (
     <motion.div
@@ -57,7 +59,7 @@ export default function PreviewModal({ url, onClose, onRename, onDelete }) {
           </AnimatePresence>
         </div>
 
-        {/* Step 1: Download / Rename / Continue */}
+        {/* Step 1 */}
         {step === 1 && (
           <div className="p-4 border-t border-gray-200 dark:border-gray-700 flex justify-between">
             <div className="flex space-x-2">
@@ -88,21 +90,16 @@ export default function PreviewModal({ url, onClose, onRename, onDelete }) {
         {step === 2 && (
           <div className="p-6 space-y-4 border-t border-gray-200 dark:border-gray-700">
             <p className="text-[#563232] dark:text-[#e7cfb4] text-sm">
-              Please enter the final size for your engraving. This cannot be
-              changed later.
+              Please enter the final size for your engraving. This cannot be changed later.
             </p>
             <p className="text-[#563232] dark:text-[#e7cfb4] text-sm">
               Select the DPI (Dots Per Inch) setting suitable for your laser.{" "}
-              <a href="#" className="underline text-blue-600">
-                Learn more here
-              </a>
+              <a href="#" className="underline text-blue-600">Learn more here</a>
             </p>
 
             <div>
-              <label className="block text-sm text-[#563232] dark:text-[#e7cfb4] mb-1">
-                Measurement Unit
-              </label>
-              <select className="w-full p-3 rounded border border-gray-300 dark:border-gray-600 dark:bg-gray-700 text-[#563232] dark:text-[#e7cfb4]">
+              <label className="block text-sm font-medium text-[#563232] dark:text-[#e7cfb4] mb-1">Measurement Unit</label>
+              <select className="w-full p-3 rounded border dark:border-gray-600 dark:bg-gray-700 text-[#563232] dark:text-[#e7cfb4]">
                 <option value="mm">Millimeters (mm)</option>
                 <option value="cm">Centimeters (cm)</option>
                 <option value="inch">Inches</option>
@@ -110,31 +107,13 @@ export default function PreviewModal({ url, onClose, onRename, onDelete }) {
             </div>
 
             <div className="flex space-x-4">
-              <div className="flex-1">
-                <label className="block text-sm text-[#563232] dark:text-[#e7cfb4] mb-1">
-                  Width
-                </label>
-                <input
-                  type="number"
-                  className="w-full p-2 rounded border border-gray-300 dark:border-gray-600 dark:bg-gray-700 text-[#563232] dark:text-[#e7cfb4]"
-                />
-              </div>
-              <div className="flex-1">
-                <label className="block text-sm text-[#563232] dark:text-[#e7cfb4] mb-1">
-                  Height
-                </label>
-                <input
-                  type="number"
-                  className="w-full p-2 rounded border border-gray-300 dark:border-gray-600 dark:bg-gray-700 text-[#563232] dark:text-[#e7cfb4]"
-                />
-              </div>
+              <input type="number" placeholder="Width" className="flex-1 p-3 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-[#e7cfb4]" />
+              <input type="number" placeholder="Height" className="flex-1 p-3 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-[#e7cfb4]" />
             </div>
 
             <div>
-              <label className="block text-sm text-[#563232] dark:text-[#e7cfb4] mb-1">
-                DPI
-              </label>
-              <select className="w-full p-3 rounded border border-gray-300 dark:border-gray-600 dark:bg-gray-700 text-[#563232] dark:text-[#e7cfb4]">
+              <label className="block text-sm font-medium text-[#563232] dark:text-[#e7cfb4] mb-1">DPI</label>
+              <select className="w-full p-3 rounded border dark:border-gray-600 dark:bg-gray-700 text-[#563232] dark:text-[#e7cfb4]">
                 <option value="72">72 DPI</option>
                 <option value="150">150 DPI</option>
                 <option value="300">300 DPI</option>
@@ -142,59 +121,38 @@ export default function PreviewModal({ url, onClose, onRename, onDelete }) {
             </div>
 
             <div className="flex justify-between pt-4">
-              <button
-                onClick={() => setStep(1)}
-                className="px-4 py-2 bg-gray-200 dark:bg-gray-600 text-[#563232] dark:text-[#e7cfb4] rounded-lg hover:bg-gray-300 dark:hover:bg-gray-500"
-              >
-                Back
-              </button>
-              <button
-                onClick={() => setStep(3)}
-                className="px-4 py-2 bg-[#FF6F3C] text-white rounded-lg hover:bg-[#e55a27]"
-              >
-                Continue
-              </button>
+              <button onClick={() => setStep(1)} className="px-4 py-2 bg-gray-300 dark:bg-gray-600 rounded">Back</button>
+              <button onClick={() => setStep(3)} className="px-4 py-2 bg-[#FF6F3C] text-white rounded hover:bg-[#e55a27]">Continue</button>
             </div>
           </div>
         )}
 
-        {/* Step 3: Engraving Machine */}
+        {/* Step 3: Machine */}
         {step === 3 && (
           <div className="p-6 space-y-6 border-t border-gray-200 dark:border-gray-700">
-            <h3 className="text-lg font-semibold text-[#563232] dark:text-[#ffc18c]">
-              What is your Engraving Machine?
-            </h3>
-            <select className="w-full p-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 text-[#563232] dark:text-[#e7cfb4]">
+            <h3 className="text-lg font-semibold text-[#563232] dark:text-[#ffc18c]">What is your Engraving Machine?</h3>
+            <select className="w-full p-3 rounded border dark:border-gray-600 dark:bg-gray-700 text-[#563232] dark:text-[#e7cfb4]">
               <option value="">-- Select Your Machine --</option>
               <option value="co2">CO₂ Laser Engraving Machine</option>
               <option value="diode">Diode Laser Engraving Machine</option>
               <option value="uv">UV Laser Engraving Machine</option>
             </select>
-
             <div className="flex justify-between pt-4">
-              <button
-                onClick={() => setStep(2)}
-                className="px-4 py-2 bg-gray-200 dark:bg-gray-600 text-[#563232] dark:text-[#e7cfb4] rounded-lg hover:bg-gray-300 dark:hover:bg-gray-500"
-              >
-                Back
-              </button>
-              <button
-                onClick={() => setStep(4)}
-                className="px-4 py-2 bg-[#FF6F3C] text-white rounded-lg hover:bg-[#e55a27]"
-              >
-                Continue
-              </button>
+              <button onClick={() => setStep(2)} className="px-4 py-2 bg-gray-300 dark:bg-gray-600 rounded">Back</button>
+              <button onClick={() => setStep(4)} className="px-4 py-2 bg-[#FF6F3C] text-white rounded hover:bg-[#e55a27]">Continue</button>
             </div>
           </div>
         )}
 
-        {/* Step 4: Material Selection */}
+        {/* Step 4: Material */}
         {step === 4 && (
           <div className="p-6 space-y-6 border-t border-gray-200 dark:border-gray-700">
-            <h3 className="text-lg font-semibold text-[#563232] dark:text-[#ffc18c]">
-              On what material do you want to engrave?
-            </h3>
-            <select className="w-full p-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 text-[#563232] dark:text-[#e7cfb4]">
+            <h3 className="text-lg font-semibold text-[#563232] dark:text-[#ffc18c]">On what material do you want to engrave?</h3>
+            <select
+              value={material}
+              onChange={(e) => setMaterial(e.target.value)}
+              className="w-full p-3 rounded border dark:border-gray-600 dark:bg-gray-700 text-[#563232] dark:text-[#e7cfb4]"
+            >
               <option value="">-- Select Material --</option>
               <option value="acrylic">Acrylic</option>
               <option value="black-slate">Black Slate</option>
@@ -207,21 +165,51 @@ export default function PreviewModal({ url, onClose, onRename, onDelete }) {
               <option value="anodized-aluminum">Anodized Aluminum</option>
               <option value="stainless-steel">Stainless Steel</option>
             </select>
-
             <div className="flex justify-between pt-4">
-              <button
-                onClick={() => setStep(3)}
-                className="px-4 py-2 bg-gray-200 dark:bg-gray-600 text-[#563232] dark:text-[#e7cfb4] rounded-lg hover:bg-gray-300 dark:hover:bg-gray-500"
-              >
-                Back
-              </button>
+              <button onClick={() => setStep(3)} className="px-4 py-2 bg-gray-300 dark:bg-gray-600 rounded">Back</button>
               <button
                 onClick={() => {
-                  alert("Engraving setup complete.");
+                  if (material === "wood") setStep(5);
+                  else {
+                    alert("Engraving setup complete.");
+                    setStep(1);
+                    onClose();
+                  }
+                }}
+                className="px-4 py-2 bg-[#2ECC71] text-white rounded hover:bg-green-600"
+              >
+                {material === "wood" ? "Next" : "Finish"}
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Step 5: Timber Selection */}
+        {step === 5 && (
+          <div className="p-6 space-y-6 border-t border-gray-200 dark:border-gray-700">
+            <h3 className="text-lg font-semibold text-[#563232] dark:text-[#ffc18c]">Select Timber Type</h3>
+            <select
+              value={timber}
+              onChange={(e) => setTimber(e.target.value)}
+              className="w-full p-3 rounded border dark:border-gray-600 dark:bg-gray-700 text-[#563232] dark:text-[#e7cfb4]"
+            >
+              <option value="">-- Choose Timber --</option>
+              <option value="mahogany">Mahogany</option>
+              <option value="teak">Teak</option>
+              <option value="jak">Jak (Jackfruit)</option>
+              <option value="kumbuk">Kumbuk</option>
+              <option value="nadun">Nadun</option>
+              <option value="satinwood">Satinwood</option>
+            </select>
+            <div className="flex justify-between pt-4">
+              <button onClick={() => setStep(4)} className="px-4 py-2 bg-gray-300 dark:bg-gray-600 rounded">Back</button>
+              <button
+                onClick={() => {
+                  alert("Timber selected. Setup complete.");
                   setStep(1);
                   onClose();
                 }}
-                className="px-4 py-2 bg-[#2ECC71] text-white rounded-lg hover:bg-green-600"
+                className="px-4 py-2 bg-[#2ECC71] text-white rounded hover:bg-green-600"
               >
                 Finish
               </button>
@@ -229,14 +217,13 @@ export default function PreviewModal({ url, onClose, onRename, onDelete }) {
           </div>
         )}
 
-        {/* Delete (always visible at bottom) */}
+        {/* Delete Button */}
         <div className="px-6 pb-6 pt-2 flex justify-end border-t border-gray-200 dark:border-gray-700">
           <button
             onClick={onDelete}
             className="inline-flex items-center px-4 py-2 bg-[#FF3C3C] text-white rounded-lg hover:bg-[#e52f2f] transition"
           >
-            <FiTrash2 className="mr-2" />
-            Delete
+            <FiTrash2 className="mr-2" /> Delete
           </button>
         </div>
       </motion.div>
