@@ -12,7 +12,8 @@ import userRouter from './routes/userRouter.js';
 import productRouter from './routes/productRouter.js';
 import orderRouter from './routes/orderRouter.js';
 import photopeaRouter from './routes/photopeaRouter.js';
-import contactRouter from './routes/contactRouter.js'; // ✅ Handles both /api/contact and /api/contacts
+import contactRouter from './routes/contactRouter.js';
+import engravingRouter from './routes/engravingRouter.js'; // ✅ NEW ROUTER
 
 dotenv.config();
 
@@ -58,8 +59,9 @@ app.use("/api/users", userRouter);
 app.use("/api/products", productRouter);
 app.use("/api/orders", orderRouter);
 app.use("/api/photopea", photopeaRouter);
-app.use("/api/contact", contactRouter);   // POST /api/contact  (public form submission)
-app.use("/api/contacts", contactRouter);  // GET/DELETE /api/contacts (admin panel access)
+app.use("/api/contact", contactRouter);   // Public contact form POST
+app.use("/api/contacts", contactRouter);  // Admin GET/DELETE
+app.use("/api", engravingRouter);         // ✅ NEW: /wood-types and /engraving-settings
 
 // ✅ Health check endpoint
 app.get("/", (req, res) => {

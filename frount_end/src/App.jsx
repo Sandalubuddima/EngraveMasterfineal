@@ -33,6 +33,7 @@ import NotesAndSketches from './pages/Notes';
 import Dashboard from './pages/Dashboard';
 import AdminUsers from './admin/Users';
 import Messages from './admin/Messages';
+import AdminEngravingSettings from './admin/AdminEngravingSettings';
 
 function App() {
   return (
@@ -63,6 +64,7 @@ function App() {
           <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
           <Route path="/admin/Users" element={<AdminUsers />} />
           <Route path="/admin/messages" element={<Messages />} />
+          <Route path="/admin/adminengravingsettings" element={<AdminEngravingSettings />} />
 
           {/* Future: 404 Not Found Route */}
           {/* <Route path="*" element={<Error_page />} /> */}
