@@ -83,6 +83,31 @@ export async function getEngravingSettingById(req, res) {
   }
 }
 
+// Get setting by wood type
+export async function getSettingByWoodType(req, res) {
+  try {
+    const { woodType } = req.params;
+
+    const setting = await EngravingSetting.findOne({
+      materialType: "Wood",
+      woodType: woodType.toLowerCase(), // normalize casing
+    });
+    
+
+    if (!setting) {
+      return res.status(404).json({ message: "Setting not found" });
+    }
+
+    res.json({
+      suggestedPower: setting.suggestedPower,
+      suggestedSpeed: setting.suggestedSpeed,
+    });
+  } catch (err) {
+    console.error("Error fetching by wood type:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+}
+
 // Update a setting by ID
 export async function updateEngravingSetting(req, res) {
   try {

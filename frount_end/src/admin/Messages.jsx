@@ -34,7 +34,7 @@ export default function Messages() {
       });
       const data = await res.json();
       if (data.message === "Contact deleted") {
-        fetchMessages();
+        fetchMessages(); // Refresh after deletion
       } else {
         alert("Delete failed");
       }
@@ -45,7 +45,13 @@ export default function Messages() {
   };
 
   useEffect(() => {
-    fetchMessages();
+    fetchMessages(); // Initial fetch
+
+    const interval = setInterval(() => {
+      fetchMessages(); // Auto-refresh every 30 seconds
+    }, 30000);
+
+    return () => clearInterval(interval); // Cleanup on unmount
   }, []);
 
   return (
@@ -55,15 +61,15 @@ export default function Messages() {
           <FiFileText className="mr-2" /> User Messages
         </h2>
 
-        {/* Scrollable table container */}
-        <div className="w-full overflow-auto max-h-[70vh]">
-          <table className="table-fixed min-w-full bg-white dark:bg-[#1C1C1C] border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden shadow-sm">
+        <div className="w-full overflow-x-auto max-h-[70vh]">
+          <table className="min-w-full bg-white dark:bg-[#1C1C1C] border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden shadow-sm hidden md:table">
             <thead className="bg-gray-100 dark:bg-[#2a2a2a]">
               <tr className="text-left text-sm font-semibold text-gray-600 dark:text-gray-300">
                 <th className="p-4 w-1/6">Name</th>
                 <th className="p-4 w-1/6">Email</th>
                 <th className="p-4 w-1/6">Phone</th>
-                <th className="p-4 w-2/6">Message</th>
+                <th className="p-4 w-1/6">Subject</th>
+                <th className="p-4 w-1/6">Message</th>
                 <th className="p-4 w-1/6">Date</th>
                 <th className="p-4 w-1/12">Actions</th>
               </tr>
@@ -71,15 +77,14 @@ export default function Messages() {
             <tbody>
               {messages.map((msg) => (
                 <tr
-                  key={msg.id || msg._id}
+                  key={msg._id}
                   className="border-t border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-[#2a2a2a]"
                 >
                   <td className="p-4 text-gray-800 dark:text-gray-100 break-words">{msg.name}</td>
                   <td className="p-4 text-gray-600 dark:text-gray-300 break-words">{msg.email}</td>
                   <td className="p-4 text-gray-500 dark:text-gray-400 break-words">{msg.phone}</td>
-                  <td className="p-4 text-gray-700 dark:text-gray-200 break-words max-w-xs">
-                    {msg.message}
-                  </td>
+                  <td className="p-4 text-gray-600 dark:text-gray-300 break-words">{msg.subject}</td>
+                  <td className="p-4 text-gray-700 dark:text-gray-200 break-words max-w-xs">{msg.message}</td>
                   <td className="p-4 text-gray-500 dark:text-gray-400">
                     {new Date(msg.createdAt).toLocaleDateString()}
                   </td>
@@ -95,13 +100,41 @@ export default function Messages() {
               ))}
               {messages.length === 0 && (
                 <tr>
-                  <td colSpan="6" className="p-4 text-center text-gray-400">
+                  <td colSpan="7" className="p-4 text-center text-gray-400">
                     No messages found.
                   </td>
                 </tr>
               )}
             </tbody>
           </table>
+
+          {/* Mobile-friendly card layout */}
+          <div className="md:hidden flex flex-col gap-4">
+            {messages.map((msg) => (
+              <div
+                key={msg._id}
+                className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 bg-white dark:bg-[#1C1C1C] shadow-sm"
+              >
+                <p className="text-sm font-semibold text-[#563232] dark:text-white mb-1">Name: {msg.name}</p>
+                <p className="text-sm text-gray-600 dark:text-gray-300 mb-1">Email: {msg.email}</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Phone: {msg.phone}</p>
+                <p className="text-sm text-gray-600 dark:text-gray-300 mb-1">Subject: {msg.subject}</p>
+                <p className="text-sm text-gray-700 dark:text-gray-200 mb-1">Message: {msg.message}</p>
+                <p className="text-sm text-gray-400 dark:text-gray-500 mb-2">
+                  Date: {new Date(msg.createdAt).toLocaleDateString()}
+                </p>
+                <button
+                  onClick={() => handleDelete(msg._id)}
+                  className="text-sm text-red-600 dark:text-red-400 hover:underline flex items-center"
+                >
+                  <FiTrash2 className="mr-1" /> Delete
+                </button>
+              </div>
+            ))}
+            {messages.length === 0 && (
+              <p className="text-center text-gray-400">No messages found.</p>
+            )}
+          </div>
         </div>
       </div>
     </AdminLayout>

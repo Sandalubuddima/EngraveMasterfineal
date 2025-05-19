@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   FiX,
@@ -14,6 +14,31 @@ export default function PreviewModal({ url, onClose, onRename, onDelete }) {
   const [step, setStep] = useState(1);
   const [material, setMaterial] = useState("");
   const [timber, setTimber] = useState("");
+  const [woodTypes, setWoodTypes] = useState([]);
+  const [suggestedPower, setSuggestedPower] = useState("");
+  const [suggestedSpeed, setSuggestedSpeed] = useState("");
+
+  useEffect(() => {
+    fetch("http://localhost:5001/api/wood-types")
+      .then((res) => res.json())
+      .then((data) => setWoodTypes(data))
+      .catch((err) => console.error("Failed to load wood types", err));
+  }, []);
+
+  const handleTimberChange = async (e) => {
+    const selected = e.target.value;
+    setTimber(selected);
+    try {
+      const res = await fetch(`http://localhost:5001/api/engraving-settings/wood/${selected}`);
+      const data = await res.json();
+      setSuggestedPower(data?.suggestedPower || "");
+      setSuggestedSpeed(data?.suggestedSpeed || "");
+    } catch (err) {
+      console.error("Failed to fetch engraving suggestions", err);
+      setSuggestedPower("");
+      setSuggestedSpeed("");
+    }
+  };
 
   return (
     <motion.div
@@ -59,7 +84,7 @@ export default function PreviewModal({ url, onClose, onRename, onDelete }) {
           </AnimatePresence>
         </div>
 
-        {/* Step 1 */}
+        {/* Step 1: Download/Rename */}
         {step === 1 && (
           <div className="p-4 border-t border-gray-200 dark:border-gray-700 flex justify-between">
             <div className="flex space-x-2">
@@ -86,31 +111,16 @@ export default function PreviewModal({ url, onClose, onRename, onDelete }) {
           </div>
         )}
 
-        {/* Step 2: Size & DPI */}
+        {/* Step 2: Size and DPI */}
         {step === 2 && (
           <div className="p-6 space-y-4 border-t border-gray-200 dark:border-gray-700">
             <p className="text-[#563232] dark:text-[#e7cfb4] text-sm">
-              Please enter the final size for your engraving. This cannot be changed later.
+              Enter engraving size and DPI setting.
             </p>
-            <p className="text-[#563232] dark:text-[#e7cfb4] text-sm">
-              Select the DPI (Dots Per Inch) setting suitable for your laser.{" "}
-              <a href="#" className="underline text-blue-600">Learn more here</a>
-            </p>
-
-            <div>
-              <label className="block text-sm font-medium text-[#563232] dark:text-[#e7cfb4] mb-1">Measurement Unit</label>
-              <select className="w-full p-3 rounded border dark:border-gray-600 dark:bg-gray-700 text-[#563232] dark:text-[#e7cfb4]">
-                <option value="mm">Millimeters (mm)</option>
-                <option value="cm">Centimeters (cm)</option>
-                <option value="inch">Inches</option>
-              </select>
-            </div>
-
             <div className="flex space-x-4">
               <input type="number" placeholder="Width" className="flex-1 p-3 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-[#e7cfb4]" />
               <input type="number" placeholder="Height" className="flex-1 p-3 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-[#e7cfb4]" />
             </div>
-
             <div>
               <label className="block text-sm font-medium text-[#563232] dark:text-[#e7cfb4] mb-1">DPI</label>
               <select className="w-full p-3 rounded border dark:border-gray-600 dark:bg-gray-700 text-[#563232] dark:text-[#e7cfb4]">
@@ -119,7 +129,6 @@ export default function PreviewModal({ url, onClose, onRename, onDelete }) {
                 <option value="300">300 DPI</option>
               </select>
             </div>
-
             <div className="flex justify-between pt-4">
               <button onClick={() => setStep(1)} className="px-4 py-2 bg-gray-300 dark:bg-gray-600 rounded">Back</button>
               <button onClick={() => setStep(3)} className="px-4 py-2 bg-[#FF6F3C] text-white rounded hover:bg-[#e55a27]">Continue</button>
@@ -168,14 +177,7 @@ export default function PreviewModal({ url, onClose, onRename, onDelete }) {
             <div className="flex justify-between pt-4">
               <button onClick={() => setStep(3)} className="px-4 py-2 bg-gray-300 dark:bg-gray-600 rounded">Back</button>
               <button
-                onClick={() => {
-                  if (material === "wood") setStep(5);
-                  else {
-                    alert("Engraving setup complete.");
-                    setStep(1);
-                    onClose();
-                  }
-                }}
+                onClick={() => material === "wood" ? setStep(5) : onClose()}
                 className="px-4 py-2 bg-[#2ECC71] text-white rounded hover:bg-green-600"
               >
                 {material === "wood" ? "Next" : "Finish"}
@@ -184,34 +186,32 @@ export default function PreviewModal({ url, onClose, onRename, onDelete }) {
           </div>
         )}
 
-        {/* Step 5: Timber Selection */}
+        {/* Step 5: Timber + Suggestions */}
         {step === 5 && (
           <div className="p-6 space-y-6 border-t border-gray-200 dark:border-gray-700">
             <h3 className="text-lg font-semibold text-[#563232] dark:text-[#ffc18c]">Select Timber Type</h3>
             <select
               value={timber}
-              onChange={(e) => setTimber(e.target.value)}
+              onChange={handleTimberChange}
               className="w-full p-3 rounded border dark:border-gray-600 dark:bg-gray-700 text-[#563232] dark:text-[#e7cfb4]"
             >
               <option value="">-- Choose Timber --</option>
-              <option value="mahogany">Mahogany</option>
-              <option value="teak">Teak</option>
-              <option value="jak">Jak (Jackfruit)</option>
-              <option value="kumbuk">Kumbuk</option>
-              <option value="nadun">Nadun</option>
-              <option value="satinwood">Satinwood</option>
+              {woodTypes.map((wood, index) => (
+                <option key={index} value={wood.name}>{wood.name}</option>
+              ))}
             </select>
-            <div className="flex justify-between pt-4">
-              <button onClick={() => setStep(4)} className="px-4 py-2 bg-gray-300 dark:bg-gray-600 rounded">Back</button>
+
+            <div className="text-sm mt-4 p-4 bg-[#f5f5f5] dark:bg-gray-800 rounded-lg border dark:border-gray-700 text-[#563232] dark:text-[#e7cfb4]">
+              <p><strong>Suggested Power:</strong> {suggestedPower ? `${suggestedPower}%` : "N/A"}</p>
+              <p><strong>Suggested Speed:</strong> {suggestedSpeed ? `${suggestedSpeed} mm/s` : "N/A"}</p>
+            </div>
+
+            <div className="flex justify-start pt-4">
               <button
-                onClick={() => {
-                  alert("Timber selected. Setup complete.");
-                  setStep(1);
-                  onClose();
-                }}
-                className="px-4 py-2 bg-[#2ECC71] text-white rounded hover:bg-green-600"
+                onClick={() => setStep(4)}
+                className="px-4 py-2 bg-gray-300 dark:bg-gray-600 rounded"
               >
-                Finish
+                Back
               </button>
             </div>
           </div>

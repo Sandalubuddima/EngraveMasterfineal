@@ -6,7 +6,8 @@ import {
   getEngravingSettings,
   getEngravingSettingById,
   updateEngravingSetting,
-  deleteEngravingSetting
+  deleteEngravingSetting,
+  getSettingByWoodType, // 🔥 include this
 } from "../controllers/engravingController.js";
 
 const router = express.Router();
@@ -39,5 +40,10 @@ router.put("/engraving-settings/:id", updateEngravingSetting);
 
 // Delete an engraving setting by ID
 router.delete("/engraving-settings/:id", deleteEngravingSetting);
+
+// 🆕 Get engraving setting by wood type (used in PreviewModal)
+// ✅ Corrected route to match frontend
+router.get("/engraving-settings/wood/:woodType", getSettingByWoodType);
+
 
 export default router;

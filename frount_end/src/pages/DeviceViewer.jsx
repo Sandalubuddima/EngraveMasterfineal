@@ -66,7 +66,7 @@ export default function DeviceViewer() {
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50">
       <Navbar />
-
+<br /><br />
       <main className="flex-grow py-10 px-4">
         {error ? (
           <div className="min-h-full flex items-center justify-center p-4">
@@ -176,7 +176,7 @@ export default function DeviceViewer() {
               <h3 className="text-lg font-semibold text-gray-800 mb-4">Device Controls</h3>
               <div className="flex flex-wrap gap-4">
                 <button
-                  className="flex-1 bg-orange-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors"
+                  className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors"
                   onClick={() => window.location.reload()}
                 >
                   Refresh Data

@@ -17,8 +17,7 @@ const navItems = [
   { name: "Dashboard", icon: <FiGrid size={18} />, path: "/dashboard" },
   { name: "Users", icon: <FiUsers size={18} />, path: "/admin/users" },
   { name: "Messages", icon: <FiFileText size={18} />, path: "/admin/messages" },
-  { name: "Reports", icon: <FiFileText size={18} />, path: "/admin/reports" },
-  { name: "Settings", icon: <FiSettings size={18} />, path: "/admin/settings" }
+  { name: "Engraving Settings", icon: <FiSettings size={18} />, path: "/admin/adminengravingsettings" }
 ];
 
 const Sidebar = () => {
