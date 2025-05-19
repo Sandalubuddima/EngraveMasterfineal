@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   FiChevronRight,
   FiSearch,
@@ -7,6 +7,7 @@ import {
   FiChevronLeft,
 } from "react-icons/fi";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import Navbar from "../../components/PageNavbar";
 import Footer from "../../components/Footer";
 import useProjects from "../../hooks/useProjects";
@@ -15,6 +16,7 @@ import ProjectList from "./ProjectList";
 import PreviewModal from "./PreviewModal";
 import RenameModal from "./RenameModal";
 import Toast from "../../components/Toast";
+import EnterDeviceModal from "../../components/EnterDeviceModal"; // Make sure this exists
 
 export default function YourProjects() {
   const {
@@ -37,11 +39,18 @@ export default function YourProjects() {
     toast,
   } = useProjects();
 
-  // 👉 Add next image navigation
+  const [showDeviceModal, setShowDeviceModal] = useState(false);
+  const navigate = useNavigate();
+
   const handleNextPreview = () => {
     const currentIndex = images.findIndex((img) => img === previewUrl);
     const nextIndex = (currentIndex + 1) % images.length;
     setPreviewUrl(images[nextIndex]);
+  };
+
+  const handleDeviceSubmit = (deviceId) => {
+    setShowDeviceModal(false);
+    navigate(`/device/${deviceId}`);
   };
 
   return (
@@ -61,7 +70,13 @@ export default function YourProjects() {
                 Your Projects
               </h1>
             </div>
-            <div className="mt-4 md:mt-0">
+            <div className="mt-4 md:mt-0 flex gap-4">
+              <button
+                onClick={() => setShowDeviceModal(true)}
+                className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-[#76f141] to-[#3cff4c] text-black font-medium rounded-lg shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105"
+              >
+                LIVE MONITOR
+              </button>
               <a
                 href="/create"
                 className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-[#FF6F3C] to-[#FF3C3C] text-white font-medium rounded-lg shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105"
@@ -182,7 +197,6 @@ export default function YourProjects() {
           }}
           onNext={handleNextPreview}
         />
-
       )}
 
       {renameInfo.current && (
@@ -195,9 +209,16 @@ export default function YourProjects() {
         />
       )}
 
-      {/* Toast */}
       {toast.visible && <Toast message={toast.message} type={toast.type} />}
       <Footer />
+
+      {/* Enter Device Modal */}
+      {showDeviceModal && (
+        <EnterDeviceModal
+          onClose={() => setShowDeviceModal(false)}
+          onSubmit={handleDeviceSubmit}
+        />
+      )}
     </>
   );
 }

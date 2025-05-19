@@ -13,6 +13,11 @@ import Services from './pages/Services';
 import Loging_page from './pages/logingpage';
 import Signup_page from './pages/signuppage';
 
+
+
+import EnterDevice from "./components/EnterDeviceModal";
+import DeviceViewer from "./pages/DeviceViewer";
+
 // User Pages
 import ProfilePage from './pages/ProfilePage';
 import Docs from './pages/Docs';
@@ -44,6 +49,9 @@ function App() {
           <Route path="/services" element={<Services />} />
           <Route path="/docs" element={<Docs />} />
           <Route path="/support" element={<Support />} />
+
+          <Route path="/enter-device" element={<EnterDevice />} />
+          <Route path="/device/:deviceId" element={<DeviceViewer />} />
 
           {/* Protected User Routes */}
           <Route path="/askai" element={<ProtectedRoute><AskAI /></ProtectedRoute>} />
