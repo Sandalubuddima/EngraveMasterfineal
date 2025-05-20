@@ -59,7 +59,7 @@ export default function LoginPage() {
           localStorage.removeItem("userEmail");
         }
 
-        const redirectPath = data.user.type === "admin" ? "/admin/dashboard" : "/profile";
+        const redirectPath = data.user.type === "admin" ? "/dashboard" : "http://localhost:5173/";
 
         setTimeout(() => {
           window.location.href = redirectPath;
@@ -93,7 +93,7 @@ export default function LoginPage() {
       if (data.token) {
         localStorage.setItem("token", data.token);
 
-        const redirectPath = data.user.type === "admin" ? "/admin/dashboard" : "/profile";
+        const redirectPath = data.user.type === "admin" ? "/dashboard" : "/profile";
 
         setTimeout(() => {
           window.location.href = redirectPath;
