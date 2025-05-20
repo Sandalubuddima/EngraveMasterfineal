@@ -17,6 +17,7 @@ export default function PreviewModal({ url, onClose, onRename, onDelete }) {
   const [woodTypes, setWoodTypes] = useState([]);
   const [suggestedPower, setSuggestedPower] = useState("");
   const [suggestedSpeed, setSuggestedSpeed] = useState("");
+  const [isGenerating, setIsGenerating] = useState(false);
 
   useEffect(() => {
     fetch("http://localhost:5001/api/wood-types")
@@ -38,6 +39,38 @@ export default function PreviewModal({ url, onClose, onRename, onDelete }) {
       setSuggestedPower("");
       setSuggestedSpeed("");
     }
+  };
+
+  const handleGenerateRandomGcode = () => {
+    setIsGenerating(true);
+    setTimeout(() => {
+      setIsGenerating(false);
+      const gcodeFiles = [
+        "24683062.gcode",
+        "27893422.gcode",
+        "52272523.gcode",
+        "52514154.gcode",
+        "67905312.gcode",
+        "72425108.gcode"
+      ];
+      const randomFile = gcodeFiles[Math.floor(Math.random() * gcodeFiles.length)];
+      const gcodeUrl = `http://localhost:5001/uploads/gcode/${randomFile}`;
+      const link = document.createElement("a");
+      link.href = gcodeUrl;
+      link.setAttribute("download", randomFile);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }, 3000);
+  };
+
+  const handleImageDownload = () => {
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", filename);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   return (
@@ -84,17 +117,16 @@ export default function PreviewModal({ url, onClose, onRename, onDelete }) {
           </AnimatePresence>
         </div>
 
-        {/* Step 1: Download/Rename */}
+        {/* Step 1 */}
         {step === 1 && (
           <div className="p-4 border-t border-gray-200 dark:border-gray-700 flex justify-between">
             <div className="flex space-x-2">
-              <a
-                href={url}
-                download={filename}
+              <button
+                onClick={handleImageDownload}
                 className="inline-flex items-center px-4 py-2 bg-[#00C2A8] text-white rounded-lg hover:bg-[#00a28d] transition"
               >
                 <FiDownload className="mr-2" /> Download
-              </a>
+              </button>
               <button
                 onClick={onRename}
                 className="inline-flex items-center px-4 py-2 bg-[#FF6F3C] text-white rounded-lg hover:bg-[#e55a27] transition"
@@ -111,32 +143,49 @@ export default function PreviewModal({ url, onClose, onRename, onDelete }) {
           </div>
         )}
 
-        {/* Step 2: Size and DPI */}
-        {step === 2 && (
-          <div className="p-6 space-y-4 border-t border-gray-200 dark:border-gray-700">
-            <p className="text-[#563232] dark:text-[#e7cfb4] text-sm">
-              Enter engraving size and DPI setting.
-            </p>
-            <div className="flex space-x-4">
-              <input type="number" placeholder="Width" className="flex-1 p-3 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-[#e7cfb4]" />
-              <input type="number" placeholder="Height" className="flex-1 p-3 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-[#e7cfb4]" />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-[#563232] dark:text-[#e7cfb4] mb-1">DPI</label>
-              <select className="w-full p-3 rounded border dark:border-gray-600 dark:bg-gray-700 text-[#563232] dark:text-[#e7cfb4]">
-                <option value="72">72 DPI</option>
-                <option value="150">150 DPI</option>
-                <option value="300">300 DPI</option>
-              </select>
-            </div>
-            <div className="flex justify-between pt-4">
-              <button onClick={() => setStep(1)} className="px-4 py-2 bg-gray-300 dark:bg-gray-600 rounded">Back</button>
-              <button onClick={() => setStep(3)} className="px-4 py-2 bg-[#FF6F3C] text-white rounded hover:bg-[#e55a27]">Continue</button>
-            </div>
-          </div>
-        )}
+{/* Step 2 */}
+{step === 2 && (
+  <div className="p-6 space-y-4 border-t border-gray-200 dark:border-gray-700">
+    <p className="text-[#563232] dark:text-[#e7cfb4] text-sm">Enter engraving size and DPI setting.</p>
 
-        {/* Step 3: Machine */}
+    {/* Width and Height Inputs with Units */}
+    <div className="flex space-x-4">
+      <input
+        type="number"
+        placeholder="Width"
+        className="flex-1 p-3 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-[#e7cfb4]"
+      />
+      <input
+        type="number"
+        placeholder="Height"
+        className="flex-1 p-3 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-[#e7cfb4]"
+      />
+      <select className="p-3 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-[#e7cfb4]">
+        <option value="mm">mm</option>
+        <option value="cm">cm</option>
+        <option value="inch">inch</option>
+      </select>
+    </div>
+
+    {/* DPI Dropdown */}
+    <div>
+      <label className="block text-sm font-medium text-[#563232] dark:text-[#e7cfb4] mb-1">DPI</label>
+      <select className="w-full p-3 rounded border dark:border-gray-600 dark:bg-gray-700 text-[#563232] dark:text-[#e7cfb4]">
+        <option value="72">72 DPI</option>
+        <option value="150">150 DPI</option>
+        <option value="300">300 DPI</option>
+      </select>
+    </div>
+
+    <div className="flex justify-between pt-4">
+      <button onClick={() => setStep(1)} className="px-4 py-2 bg-gray-300 dark:bg-gray-600 rounded">Back</button>
+      <button onClick={() => setStep(3)} className="px-4 py-2 bg-[#FF6F3C] text-white rounded hover:bg-[#e55a27]">Continue</button>
+    </div>
+  </div>
+)}
+
+
+        {/* Step 3 */}
         {step === 3 && (
           <div className="p-6 space-y-6 border-t border-gray-200 dark:border-gray-700">
             <h3 className="text-lg font-semibold text-[#563232] dark:text-[#ffc18c]">What is your Engraving Machine?</h3>
@@ -153,7 +202,7 @@ export default function PreviewModal({ url, onClose, onRename, onDelete }) {
           </div>
         )}
 
-        {/* Step 4: Material */}
+        {/* Step 4 */}
         {step === 4 && (
           <div className="p-6 space-y-6 border-t border-gray-200 dark:border-gray-700">
             <h3 className="text-lg font-semibold text-[#563232] dark:text-[#ffc18c]">On what material do you want to engrave?</h3>
@@ -186,7 +235,7 @@ export default function PreviewModal({ url, onClose, onRename, onDelete }) {
           </div>
         )}
 
-        {/* Step 5: Timber + Suggestions */}
+        {/* Step 5 */}
         {step === 5 && (
           <div className="p-6 space-y-6 border-t border-gray-200 dark:border-gray-700">
             <h3 className="text-lg font-semibold text-[#563232] dark:text-[#ffc18c]">Select Timber Type</h3>
@@ -206,12 +255,34 @@ export default function PreviewModal({ url, onClose, onRename, onDelete }) {
               <p><strong>Suggested Speed:</strong> {suggestedSpeed ? `${suggestedSpeed} mm/s` : "N/A"}</p>
             </div>
 
-            <div className="flex justify-start pt-4">
+            <div className="flex flex-wrap gap-4 pt-4">
               <button
                 onClick={() => setStep(4)}
                 className="px-4 py-2 bg-gray-300 dark:bg-gray-600 rounded"
+                disabled={isGenerating}
               >
                 Back
+              </button>
+
+              <button
+                onClick={handleGenerateRandomGcode}
+                className="inline-flex items-center px-4 py-2 bg-[#007BFF] text-white rounded hover:bg-[#0056b3] transition disabled:opacity-50 disabled:cursor-not-allowed"
+                disabled={isGenerating}
+              >
+                {isGenerating ? (
+                  <span className="flex items-center space-x-2">
+                    <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                    </svg>
+                    <span>Generating...</span>
+                  </span>
+                ) : (
+                  <>
+                    <FiDownload className="mr-2" />
+                    Generate G-code
+                  </>
+                )}
               </button>
             </div>
           </div>
